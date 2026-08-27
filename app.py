@@ -21,7 +21,7 @@ menu = [
 
 st.sidebar.image(
 "logo/Logo_PDI-on-Track-02.png",
-use_container_width=True
+use_column_width=True
 )
 
 page = st.sidebar.radio(
