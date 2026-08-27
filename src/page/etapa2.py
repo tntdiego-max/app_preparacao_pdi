@@ -26,25 +26,32 @@ def render_etapa02():
         st.write(st.session_state.df_inserir_datasul)
 
     #LEITURA DO ARQUIVO EXCEL ES0564A e TABELA DE SERVIÇOS
-# CARREGAR ARQUIVO ES0564A
-    if "arquivo_es0564a" not in st.session_state:
-        st.session_state.arquivo_es0564a = None
-
-    if "df_es0564a" not in st.session_state:
-        st.session_state.df_es0564a = None
-
     st.subheader("➡️ TABELA ES0564A")
-    st.session_state.arquivo_es0564a = st.file_uploader(
+    # 1. O key salva o arquivo enviado em st.session_state.arquivo_es0564a
+    st.file_uploader(
         "Selecione o arquivo Excel.\n Arquivos aceitos:'csv'",
         type=["csv"],
         key="upload_es0564a"
     )
 
-    if st.session_state.arquivo_es0564a is not None:
-        st.session_state.df_es0564a = pd.read_csv(st.session_state.arquivo_es0564a,encoding='ISO-8859-1',sep=';')
-        
-    if st.session_state.df_es0564a is not None:
+    # 2. Processa o arquivo apenas na primeira vez ou quando o arquivo muda
+    if "df_es0564a" not in st.session_state or st.session_state.get("nome_ultimo_es0564a") != st.session_state.arquivo_es0564a.name:
+        st.session_state.df_es0564a = pd.read_csv(
+            st.session_state.arquivo_es0564a,
+            encoding='ISO-8859-1',
+            sep=';'
+        )
+        st.session_state.nome_ultimo_es0564a = st.session_state.arquivo_es0564a.name
+    
+    else 
+        # Limpa a sessão se o arquivo for removido pelo usuário
+        st.session_state.pop("df_es0564a",None)
+        st.session_state.pop("nome_ultimo_es0564a", None)
+
+    # 3. Exibe a tabela se ela existir na sessão
+    if st.session_state.get("df_es0564a") is not None:
         st.write(st.session_state.df_es0564a)
+
 
 # CARREGAR ARQUIVO SERVIÇOS
     if "df_servicos" not in st.session_state:
