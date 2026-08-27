@@ -31,19 +31,20 @@ def render_etapa02():
     st.file_uploader(
         "Selecione o arquivo Excel.\n Arquivos aceitos:'csv'",
         type=["csv"],
-        key="upload_es0564a"
+        key="arquivo_es0564a"
     )
 
     # 2. Processa o arquivo apenas na primeira vez ou quando o arquivo muda
-    if "df_es0564a" not in st.session_state or st.session_state.get("nome_ultimo_es0564a") != st.session_state.arquivo_es0564a.name:
-        st.session_state.df_es0564a = pd.read_csv(
-            st.session_state.arquivo_es0564a,
-            encoding='ISO-8859-1',
-            sep=';'
-        )
+    if st.session_state.arquivo_es0564a is not None:
+        if "df_es0564a" not in st.session_state or st.session_state.get("nome_ultimo_es0564a") != st.session_state.arquivo_es0564a.name:
+            st.session_state.df_es0564a = pd.read_csv(
+                st.session_state.arquivo_es0564a,
+                encoding='ISO-8859-1',
+                sep=';'
+            )
         st.session_state.nome_ultimo_es0564a = st.session_state.arquivo_es0564a.name
     
-    else 
+    else: 
         # Limpa a sessão se o arquivo for removido pelo usuário
         st.session_state.pop("df_es0564a",None)
         st.session_state.pop("nome_ultimo_es0564a", None)
