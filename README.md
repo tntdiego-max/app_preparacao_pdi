@@ -2,7 +2,7 @@
 
 ## 📦 Requisitos
 
-- Python 3.9 ou superior  
+- Python 3.11  
 - Pip atualizado  
 
 ## ⚙️ Instruções
