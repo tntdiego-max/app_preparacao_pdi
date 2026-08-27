@@ -70,42 +70,34 @@ def render_etapa02():
         and st.session_state.get("df_es0564a") is not None
         and st.session_state.get("df_servicos") is not None):
 
-# Roda o algoritmo apenas se o resultado ainda não foi processado
+# Executa o cálculo apenas se o resultado ainda não foi processado
         if "df_planejamento_lançados_v4" not in st.session_state:
             with st.spinner("Processando planejamento PDI..."):
-# 4. Processamento com trava de cache
-if (st.session_state.get("df_inserir_datasul") is not None
-    and st.session_state.get("df_es0564a") is not None
-    and st.session_state.get("df_servicos") is not None):
-
-    # Executa o cálculo apenas se o resultado ainda não foi processado
-    if "df_planejamento_lançados_v4" not in st.session_state:
-        with st.spinner("Processando planejamento PDI..."):
-            (
-                st.session_state.df_pendentes,
-                st.session_state.df_lancados,
-                st.session_state.df_planejamento_lançados_v2_nulos,
-                st.session_state.df_planejamento_lançados_v4
-            ) = planejamento_pdi(
-                st.session_state.df_inserir_datasul,
-                st.session_state.df_es0564a,
-                st.session_state.df_servicos
-            )
-
-    # Exibição dos dados salvos no session_state
-    st.subheader("VEICULOS SEM LANÇAMENTOS NO DATASUL:")
-    st.write(f"Quantidade: {len(st.session_state.df_pendentes)}")
-    st.write(st.session_state.df_pendentes)
-
-    st.subheader('VEICULOS COM LANÇAMENTOS NO DATASUL:')
-    st.write(f"Quantidade: {len(st.session_state.df_lancados)}")
-    st.write(st.session_state.df_lancados)
-
-    st.subheader('DESCRIÇÃO NAO ENCONTRADA FAVOR CADASTRAR NA TABELA cadastro_serviços')
-    st.write(st.session_state.df_planejamento_lançados_v2_nulos)
-
-    st.subheader('TABELA PARA CONFERENCIA DOS SERVIÇOS DATASUL E TABELA CLIENTE')
-    st.write(st.session_state.df_planejamento_lançados_v4)
+                (
+                    st.session_state.df_pendentes,
+                    st.session_state.df_lancados,
+                    st.session_state.df_planejamento_lançados_v2_nulos,
+                    st.session_state.df_planejamento_lançados_v4
+                ) = planejamento_pdi(
+                    st.session_state.df_inserir_datasul,
+                    st.session_state.df_es0564a,
+                    st.session_state.df_servicos
+                )
+    
+        # Exibição dos dados salvos no session_state
+        st.subheader("VEICULOS SEM LANÇAMENTOS NO DATASUL:")
+        st.write(f"Quantidade: {len(st.session_state.df_pendentes)}")
+        st.write(st.session_state.df_pendentes)
+    
+        st.subheader('VEICULOS COM LANÇAMENTOS NO DATASUL:')
+        st.write(f"Quantidade: {len(st.session_state.df_lancados)}")
+        st.write(st.session_state.df_lancados)
+    
+        st.subheader('DESCRIÇÃO NAO ENCONTRADA FAVOR CADASTRAR NA TABELA cadastro_serviços')
+        st.write(st.session_state.df_planejamento_lançados_v2_nulos)
+    
+        st.subheader('TABELA PARA CONFERENCIA DOS SERVIÇOS DATASUL E TABELA CLIENTE')
+        st.write(st.session_state.df_planejamento_lançados_v4)
 
     
 
