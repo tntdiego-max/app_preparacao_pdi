@@ -36,7 +36,7 @@ def render_etapa03():
     if (st.session_state.cod_servicos is not None
         and st.session_state.df_estoque is not None
         and st.session_state.df_planejamento_lançados_v4 is not None
-        and st.session_state.df_servicos is not None
+        and st.session_state.get("df_servicos") is not None
        ):
         (df_estoque, 
          df_com_placa_v1, 
