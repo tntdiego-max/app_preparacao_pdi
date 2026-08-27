@@ -86,6 +86,10 @@ def render_etapa02():
         # Executa o algoritmo pesado apenas 1 vez por alteração de arquivo
         if "df_planejamento_lançados_v4" not in st.session_state:
             with st.spinner("Processando planejamento PDI... Aguarde..."):
+                # Toast na tela (Linha 73)
+                st.toast("⏳ Iniciando planejamento PDI...", icon="🔍")
+                print(">>> INICIANDO PLANEJAMENTO PDI...")
+                
                 res_pendentes, res_lancados, res_nulos, res_v4 = planejamento_pdi(
                     df_inserir,
                     df_es0564a,
