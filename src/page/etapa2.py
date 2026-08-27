@@ -37,13 +37,20 @@ def render_etapa02():
     # 2. Processa o arquivo apenas na primeira vez ou quando o arquivo muda
     if st.session_state.arquivo_es0564a is not None:
         if "df_es0564a" not in st.session_state or st.session_state.get("nome_ultimo_es0564a") != st.session_state.arquivo_es0564a.name:
-            st.session_state.df_es0564a = pd.read_csv(
-                st.session_state.arquivo_es0564a,
-                encoding='ISO-8859-1',
-                sep=';'
-            )
-        st.session_state.nome_ultimo_es0564a = st.session_state.arquivo_es0564a.name
-    
+            try:
+                # Reset do ponteiro de leitura do arquivo
+                st.session_state.arquivo_es0564a.seek(0)
+                
+                st.session_state.df_es0564a = pd.read_csv(
+                    st.session_state.arquivo_es0564a,
+                    encoding='ISO-8859-1',
+                    sep=';'
+                )
+                st.session_state.nome_ultimo_es0564a = st.session_state.arquivo_es0564a.name
+
+            except pd.errors.EmptyDataError:
+                st.error("O arquivo CSV enviado está vazio ou não contém colunas legíveis.")
+            
     else: 
         # Limpa a sessão se o arquivo for removido pelo usuário
         st.session_state.pop("df_es0564a",None)
