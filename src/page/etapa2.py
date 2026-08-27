@@ -68,10 +68,10 @@ def render_etapa02():
     st.session_state.df_servicos = pd.read_excel("./cadastro_servicos.xlsx")
     
 # CARREGAR APLICAÇÃO PLANEJAMENTO PDI
-    if (st.session_state.df_inserir_datasul is not None
-        and st.session_state.df_es0564a is not None
-        and st.session_state.df_servicos is not None):
-        
+    if (st.session_state.get("df_inserir_datasul") is not None
+        and st.session_state.get("df_es0564a") is not None
+        and st.session_state.get("df_servicos") is not None):
+
         df_pendentes, df_lancados, df_planejamento_lançados_v2_nulos, df_planejamento_lançados_v4 = planejamento_pdi(
             st.session_state.df_inserir_datasul,
             st.session_state.df_es0564a,
