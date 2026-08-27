@@ -15,8 +15,8 @@ def render_etapa02():
     if "df_inserir_datasul" not in st.session_state:
         st.session_state.df_inserir_datasul = None
 
-    if st.session_state.df_pendente_de_prep is not None:
-        st.session_state.df_inserir_datasul = st.session_state.df_pendente_de_prep[st.session_state.df_pendente_de_prep['PREPARAÇÃO'].notnull()].reset_index(drop=True)
+    if st.session_state.get("df_pendente_de_prep") is not None:
+        st.session_state.df_inserir_datasul = st.session_state.df_pendente_de_prep[st.session_state.df_pendente_de_prep['PREPARAÇÃO']            .notnull()].reset_index(drop=True)
 
     st.write("Total com preparação do cliente")
 
@@ -62,23 +62,30 @@ def render_etapa02():
 
 
 # CARREGAR ARQUIVO SERVIÇOS
-    if "df_servicos" not in st.session_state:
-        st.session_state.df_servicos = None
-        
-    st.session_state.df_servicos = pd.read_excel("./cadastro_servicos.xlsx")
+    if st.session_state.get("df_servicos") is None:
+        st.session_state.df_servicos = pd.read_excel("./cadastro_servicos.xlsx")
     
 # CARREGAR APLICAÇÃO PLANEJAMENTO PDI
     if (st.session_state.get("df_inserir_datasul") is not None
         and st.session_state.get("df_es0564a") is not None
         and st.session_state.get("df_servicos") is not None):
 
-        df_pendentes, df_lancados, df_planejamento_lançados_v2_nulos, df_planejamento_lançados_v4 = planejamento_pdi(
-            st.session_state.df_inserir_datasul,
-            st.session_state.df_es0564a,
-            st.session_state.df_servicos
-        )
+# Roda o algoritmo apenas se o resultado ainda não foi processado
+        if "df_planejamento_lançados_v4" not in st.session_state:
+            with st.spinner("Processando planejamento PDI..."):
+                df_pendentes, df_lancados, df_planejamento_lançados_v2_nulos, df_planejamento_lançados_v4 = planejamento_pdi(
+                    st.session_state.df_inserir_datasul,
+                    st.session_state.df_es0564a,
+                    st.session_state.df_servicos
+                )
     
-        
+# SALVAR SESSION_STATE PARA DEMAIS APLICAÇÕES E PAGINAS
+                st.session_state.df_pendentes = df_pendentes
+                st.session_state.df_lancados = df_lancados
+                st.session_state.df_planejamento_lançados_v2_nulos = df_planejamento_lançados_v2_nulos
+                st.session_state.df_planejamento_lançados_v4 = df_planejamento_lançados_v4
+
+# Exibição dinâmica sem re-executar a lógica
         st.subheader("VEICULOS SEM LANÇAMENTOS NO DATASUL:")
         st.write(f"Quantidade: {len(df_pendentes)}")
         st.write(df_pendentes)
@@ -94,8 +101,7 @@ def render_etapa02():
         st.write(df_planejamento_lançados_v4)
 
     
-# SALVAR SESSION_STATE PARA DEMAIS APLICAÇÕES E PAGINAS
-        st.session_state.df_planejamento_lançados_v4 = df_planejamento_lançados_v4
+
     
 
 
